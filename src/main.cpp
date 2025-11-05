@@ -13,10 +13,8 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
-// 0 = left
-// 1 = right
-// 2 = skills
-int autonToggle = 1; //0, 1
+// auton toggles: 0 = left, 1 = right, 2 = skills
+int autonToggle = 2;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -43,16 +41,14 @@ digital_out matchLoader = digital_out(Brain.ThreeWirePort.H);
 digital_out stopPiston = digital_out(Brain.ThreeWirePort.E);
 digital_out frontDescore = digital_out(Brain.ThreeWirePort.F);
 
-// pid constants
+// constants
 double pi = 3.1415926;
 double diameter = 3.25;
 double g = 36.0/48.0;
+color blue = color(0, 0, 255);
+color red = color(255, 0, 0);
 
 // piston controls
-void stopPistonControl() {
-  stopPiston.set(!stopPiston.value());
-}
-
 void loaderControl() {
   matchLoader.set(!matchLoader.value());
 }
@@ -61,12 +57,9 @@ void descoreControl() {
   descore.set(!descore.value());
 }
 
-void frontDescoreControl() {
+void unloading() {
   frontDescore.set(!frontDescore.value());
-}
-
-void blockholderControl() {
-  blockholder.set(!blockholder.value());
+  stopPiston.set(!stopPiston.value());
 }
 
 void drive(int lspeed, int rspeed, int wt) {
@@ -82,14 +75,14 @@ void intakeTop() {
   rollersTop.spin(forward, 100, pct);
   topIntake.spin(forward, 90, pct);
 }
-// intake to the bottom middle goal
-void intakeBottomMiddle() {
+// intake to the middle top goal
+void intakemiddleTop() {
   rollersBottom.spin(reverse, 100, pct);
   rollersTop.spin(forward, 100, pct);
   topIntake.spin(reverse, 100, pct);
 }
-// intake to the bottom bottom goal
-void intakeBottomBottom() {
+// intake to the middle bottom goal
+void intakeMiddleBottom() {
   rollersBottom.spin(forward, 35, pct);
   rollersTop.spin(reverse, 100, pct);
   topIntake.spin(reverse, 100, pct);
@@ -112,34 +105,39 @@ void DriveVolts(double lspeed, double rspeed, double multipier, int wt) {
   rightBack.spin(forward, rspeed, voltageUnits::mV);
 }
 
-void inchDrive(float target, int timeout = 1200, float kp = 4.5) {
+void inchDrive(float target, int timeout = 1200, float kp = 3.8) {
   timer t2;
   t2.reset();
+
   float x = 0.0;
   float ap = 2.5; // increase = more wiggle // decrease = less wiggle 3
   float aerror = 0;
   float Atarget = Gyro.rotation();
   float heading = Gyro.rotation();
-  float aspeed = 0;
-  float tolerance = 1;
-  float accuracy = 1;
-  float ki = 0;
+  float aspeed = 0.0;
+  float tolerance = 1.0;
+  float accuracy = 1.0;
+  float ki = 0.0;
   float error = target - x;
   float speed = error * kp;
   float integral = 0;
   float prevError = target;
   float derivative = 0;
-  float kd = 2;
+  float kd = 2.65;
+
+  leftFront.setPosition(0.0, rev);
   rightFront.setPosition(0.0, rev);
+  
   while (t2.time(msec) < timeout) {
     heading = Gyro.rotation();
     aerror = Atarget - heading;
     aspeed = ap*aerror;
-    x = rightFront.position(rev) * pi * diameter * g;
+    x = ((rightFront.position(rev) + leftFront.position(rev)) / 2.0) * pi * diameter * g;
     error = target - x;
     if (fabs(error) < tolerance) {
       integral += error;
     }
+    speed = error * kp + integral * ki + derivative * kd;
     if(speed >= 100){
       speed = 100;
     }
@@ -148,14 +146,13 @@ void inchDrive(float target, int timeout = 1200, float kp = 4.5) {
     }
     derivative = error - prevError;
     prevError = error;
-    speed = error * kp + integral * ki + derivative * kd;
     DriveVolts(speed+aspeed, speed-aspeed, 1, 10);
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.clearLine();
     Controller1.Screen.print(error);
   }
-  leftSide.setStopping(brake);
-  rightSide.setStopping(brake);
+  leftSide.stop(brake);
+  rightSide.stop(brake);
   wait(10, msec);
 }
   
@@ -176,8 +173,6 @@ void gyroturnAbs(double target, int timeout = 1200) {
     float accuracy = 0.1;
     float bias = 0;
     int count = 0;
-  
-  
     while (t1.time(msec) < timeout)
     {
       heading = Gyro.rotation(degrees);
@@ -202,7 +197,9 @@ void gyroturnAbs(double target, int timeout = 1200) {
       DriveVolts(speed, -speed, 1, 0);
     }
     leftSide.setStopping(brake);
+    leftSide.stop();
     rightSide.setStopping(brake);
+    rightSide.stop();
     wait(10, msec);
   }
 
@@ -227,7 +224,6 @@ void pre_auton(void) {
   // Gyro.setRotation(0, deg);
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
-
 }
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -283,45 +279,13 @@ void autonomous(void) {
       matchLoader.set(false);
       intakeTop();
       break;
-    /*
-    case 0: // left side
+    case 2: // SKILLS
       intakeTop();
       stopPiston.set(true);
-      inchDrive(24.5);
-      gyroturnAbs(-28);
-      inchDrive(14, 700, 3.2);
-      gyroturnAbs(-135);
+      inchDrive(21);
+      gyroturnAbs(33.2, 1000);
+      inchDrive(25);
       break;
-    case 1: // right side
-      intakeTop();
-      stopPiston.set(true);
-      inchDrive(26);
-      gyroturnAbs(28, 500);
-      inchDrive(18, 700, 3.2);
-      intakeStop();
-      wait(300, msec);
-      gyroturnAbs(-47, 800);
-      intakeBottomBottom();
-      inchDrive(13.5, 500);
-      wait(1000, msec);
-      intakeStop();
-      inchDrive(-41);
-      matchLoader.set(true);
-      gyroturnAbs(-169);
-      inchDrive(-20, 1000);
-      intakeTop();
-      inchDrive(29, 1200, 4.0);
-      wait(550, msec);
-      intakeStop();
-      inchDrive(-26);
-      frontDescore.set(true);
-      stopPiston.set(false);
-      intakeTop();
-      break;
-      /
-    // case 2: // SKILLS
-    //   break;
-    */
   }
 }
 
@@ -337,16 +301,51 @@ void autonomous(void) {
 
 void usercontrol(void) {
   Controller1.ButtonDown.pressed(loaderControl);
-  Controller1.ButtonRight.pressed(stopPistonControl);
-  Controller1.ButtonY.pressed(frontDescoreControl);
+  Controller1.ButtonY.pressed(unloading);
   Controller1.ButtonB.pressed(descoreControl);
-  Controller1.Button
+  //Controller1.Button
   while (1) {
     double sensitivity = 1;
     int leftSpeed = (Controller1.Axis3.position(pct) + Controller1.Axis1.position(pct)) * sensitivity;
     int rightSpeed = (Controller1.Axis3.position(pct) - Controller1.Axis1.position(pct)) * sensitivity;
     drive (leftSpeed, rightSpeed, 10);
-    // scoring top
+    // scoring top top
+    if (Controller1.ButtonR1.pressing()) {
+      rollersTop.spin(forward, 100, pct);
+      topIntake.spin(forward, 100, pct);
+    }
+    // scoring bottom top
+    else if (Controller1.ButtonR2.pressing()) {
+      rollersTop.spin(forward, 100, pct);
+      topIntake.spin(reverse, 100, pct);
+    }
+    // bottom intake moving
+    else if (Controller1.ButtonL1.pressing()) {
+      rollersBottom.spin(reverse, 100, pct);
+    }
+    else if (Controller1.ButtonL2.pressing()) {
+      rollersTop.spin(reverse, 100, pct);
+      rollersBottom.spin(forward, 100, pct);
+      topIntake.spin(reverse, 100, pct);
+    }
+    else {
+      rollersBottom.stop();
+      topIntake.stop();
+      rollersTop.stop();
+    }
+    // top top
+    if (Controller1.ButtonL1.pressing() && Controller1.ButtonR1.pressing()) {
+      rollersBottom.spin(reverse, 100, pct);
+      rollersTop.spin(forward, 100, pct);
+      topIntake.spin(forward, 100, pct);
+    }
+    // bottom top
+    else if (Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing()) {
+      rollersBottom.spin(reverse, 100, pct);
+      rollersTop.spin(forward, 100, pct);
+      topIntake.spin(reverse, 100, pct);     
+    }
+    /*
     if (Controller1.ButtonR1.pressing()) {
       rollersBottom.spin(reverse, 100, pct);
       rollersTop.spin(forward, 100, pct);
@@ -363,14 +362,25 @@ void usercontrol(void) {
       rollersBottom.spin(forward, 100, pct);
       rollersTop.spin(reverse, 100, pct);
     }
-    else {
-      rollersBottom.stop();
-      topIntake.stop();
+    // loop to stop the rollers when there are more than 4 balls 
+    if ((stopPiston.value() == true) && Controller1.ButtonR1.pressing()) {
+      int count = 0;
+      while (count <= 4) {
+        if (// color == blue or color == red) {
+          rollersBottom.spin(reverse, 100, pct);
+          rollersTop.spin(forward, 100, pct);
+          topIntake.spin(forward, 100, pct);    
+          count++;  
+        }
+      }
       rollersTop.stop();
+      topIntake.stop();
     }
+    */
     wait(20, msec);
   }
 }
+
 
 int main() {
   // Set up callbacks for autonomous and driver control periods.
