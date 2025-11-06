@@ -283,8 +283,12 @@ void autonomous(void) {
       intakeTop();
       stopPiston.set(true);
       inchDrive(21);
-      gyroturnAbs(33.2, 1000);
-      inchDrive(25);
+      gyroturnAbs(34, 1000);
+      inchDrive(20);
+      gyroturnAbs(130);
+      inchDrive(30);
+      matchLoader.set(true);
+      gyroturnAbs(180);
       break;
   }
 }
