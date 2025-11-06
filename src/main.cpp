@@ -79,7 +79,7 @@ void intakeTop() {
 void intakemiddleTop() {
   rollersBottom.spin(reverse, 100, pct);
   rollersTop.spin(forward, 100, pct);
-  topIntake.spin(reverse, 100, pct);
+  topIntake.spin(reverse, 70, pct);
 }
 // intake to the middle bottom goal
 void intakeMiddleBottom() {
@@ -321,12 +321,13 @@ void usercontrol(void) {
     // scoring bottom top
     else if (Controller1.ButtonR2.pressing()) {
       rollersTop.spin(forward, 100, pct);
-      topIntake.spin(reverse, 100, pct);
+      topIntake.spin(reverse, 70, pct);
     }
-    // bottom intake moving
+    // rotating the bottom rollers
     else if (Controller1.ButtonL1.pressing()) {
       rollersBottom.spin(reverse, 100, pct);
     }
+    // remove balls out of robot
     else if (Controller1.ButtonL2.pressing()) {
       rollersTop.spin(reverse, 100, pct);
       rollersBottom.spin(forward, 100, pct);
@@ -347,7 +348,7 @@ void usercontrol(void) {
     else if (Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing()) {
       rollersBottom.spin(reverse, 100, pct);
       rollersTop.spin(forward, 100, pct);
-      topIntake.spin(reverse, 100, pct);     
+      topIntake.spin(reverse, 70, pct);     
     }
     /*
     if (Controller1.ButtonR1.pressing()) {
