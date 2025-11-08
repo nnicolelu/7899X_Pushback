@@ -115,16 +115,20 @@ void inchDrive(float target, int timeout = 1200, float kp = 3.8) {
   float Atarget = Gyro.rotation();
   float heading = Gyro.rotation();
   float aspeed = 0.0;
-  float tolerance = 1.0;
-  float accuracy = 1.0;
-  float ki = 0.0;
-  float error = target - x;
-  float speed = error * kp;
+  const float tolerance = 1.0;
+  const float accuracy = 1.0; //may need adjust
+  int count = 0;
+
+  const float ki = 0.0;
+  const float kd = 2.65;
+ 
   float integral = 0;
   float prevError = target;
   float derivative = 0;
-  float kd = 2.65;
-
+  
+  float error = target - x;
+  float speed = error * kp;
+ 
   leftFront.setPosition(0.0, rev);
   rightFront.setPosition(0.0, rev);
   
@@ -132,25 +136,44 @@ void inchDrive(float target, int timeout = 1200, float kp = 3.8) {
     heading = Gyro.rotation();
     aerror = Atarget - heading;
     aspeed = ap*aerror;
+  
     x = ((rightFront.position(rev) + leftFront.position(rev)) / 2.0) * pi * diameter * g;
     error = target - x;
+    if (fabs(error) < accuracy)
+    {
+      count++;
+    }
+    else {
+      count = 0;
+    }
+    
+    if (count > 20) {
+      break;
+    }
+  
     if (fabs(error) < tolerance) {
       integral += error;
     }
+    
     speed = error * kp + integral * ki + derivative * kd;
+    
     if(speed >= 100){
       speed = 100;
     }
+    
     if (speed <= -100){
       speed = -100;
     }
+    
     derivative = error - prevError;
     prevError = error;
     DriveVolts(speed+aspeed, speed-aspeed, 1, 10);
     Controller1.Screen.setCursor(1, 1);
     Controller1.Screen.clearLine();
     Controller1.Screen.print(error);
+    wait(10, msec);
   }
+  
   leftSide.stop(brake);
   rightSide.stop(brake);
   wait(10, msec);
@@ -173,8 +196,7 @@ void gyroturnAbs(double target, int timeout = 1200) {
     float accuracy = 0.1;
     float bias = 0;
     int count = 0;
-    while (t1.time(msec) < timeout)
-    {
+    while (t1.time(msec) < timeout) {
       heading = Gyro.rotation(degrees);
       error = target - heading;
       derivative = (error - prevError);
@@ -195,6 +217,7 @@ void gyroturnAbs(double target, int timeout = 1200) {
       }
       speed = kp * error + kd * derivative + ki * integral;
       DriveVolts(speed, -speed, 1, 0);
+      wait(10, msec);
     }
     leftSide.setStopping(brake);
     leftSide.stop();
@@ -309,6 +332,12 @@ void usercontrol(void) {
   Controller1.ButtonB.pressed(descoreControl);
   //Controller1.Button
   while (1) {
+    Brain.Screen.print("bottom voltage: ");
+    Brain.Screen.print(rollersBottom.voltage(volt));
+    Brain.Screen.newLine();
+    Brain.Screen.print("top voltage: ");
+    Brain.Screen.print(rollersTop.voltage(volt));
+    Brain.Screen.newLine();
     double sensitivity = 1;
     int leftSpeed = (Controller1.Axis3.position(pct) + Controller1.Axis1.position(pct)) * sensitivity;
     int rightSpeed = (Controller1.Axis3.position(pct) - Controller1.Axis1.position(pct)) * sensitivity;
@@ -326,6 +355,18 @@ void usercontrol(void) {
     // rotating the bottom rollers
     else if (Controller1.ButtonL1.pressing()) {
       rollersBottom.spin(reverse, 100, pct);
+      if (Controller1.ButtonR1.pressing()) {
+        rollersTop.spin(forward, 100, pct);
+        topIntake.spin(forward, 100, pct);
+      }
+      else if (Controller1.ButtonR2.pressing()) {
+        rollersTop.spin(forward, 100, pct);
+        topIntake.spin(reverse, 100, pct);        
+      }
+      else {
+        rollersTop.stop();
+        topIntake.stop();
+      }
     }
     // remove balls out of robot
     else if (Controller1.ButtonL2.pressing()) {
@@ -339,17 +380,17 @@ void usercontrol(void) {
       rollersTop.stop();
     }
     // top top
-    if (Controller1.ButtonL1.pressing() && Controller1.ButtonR1.pressing()) {
-      rollersBottom.spin(reverse, 100, pct);
-      rollersTop.spin(forward, 100, pct);
-      topIntake.spin(forward, 100, pct);
-    }
+    // if (Controller1.ButtonL1.pressing() && Controller1.ButtonR1.pressing()) {
+    //   rollersBottom.spin(reverse, 100, pct);
+    //   rollersTop.spin(forward, 100, pct);
+    //   topIntake.spin(forward, 100, pct);
+    // }
     // bottom top
-    else if (Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing()) {
-      rollersBottom.spin(reverse, 100, pct);
-      rollersTop.spin(forward, 100, pct);
-      topIntake.spin(reverse, 70, pct);     
-    }
+    // else if (Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing()) {
+    //   rollersBottom.spin(reverse, 100, pct);
+    //   rollersTop.spin(forward, 100, pct);
+    //   topIntake.spin(reverse, 70, pct);     
+    // }
     /*
     if (Controller1.ButtonR1.pressing()) {
       rollersBottom.spin(reverse, 100, pct);
