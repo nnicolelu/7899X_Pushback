@@ -22,18 +22,18 @@ controller Controller1;
 inertial Gyro = inertial(PORT16);
 //drivebase
 motor leftFront = motor(PORT5, ratio6_1, false);
-motor leftMiddle = motor(PORT6, ratio18_1, true);
+motor leftMiddle = motor(PORT6, ratio6_1, false);
 motor leftBack = motor(PORT7, ratio6_1, false);
 motor rightFront = motor(PORT11, ratio6_1, true);
-motor rightMiddle = motor(PORT1, ratio18_1, false);
+motor rightMiddle = motor(PORT1, ratio6_1, true);
 motor rightBack = motor(PORT2, ratio6_1, true);
 motor_group leftSide = motor_group(leftFront, leftMiddle, leftBack);
 motor_group rightSide = motor_group(rightFront, rightMiddle, rightBack);
 
 //intakes
 motor rollersBottom = motor(PORT12, ratio6_1, true); // rollersBottom
-motor rollersTop = motor(PORT17, ratio6_1, false); // rollersTop
-motor topIntake = motor(PORT3, ratio6_1, false);
+motor rollersTop = motor(PORT17, ratio18_1, false); // rollersTop
+motor topIntake = motor(PORT3, ratio18_1, false);
   
 //pneumatics
 digital_out descore = digital_out(Brain.ThreeWirePort.G);
