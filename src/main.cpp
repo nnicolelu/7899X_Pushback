@@ -346,6 +346,12 @@ void usercontrol(void) {
     if (Controller1.ButtonR1.pressing()) {
       rollersTop.spin(forward, 100, pct);
       topIntake.spin(forward, 100, pct);
+      if (Controller1.ButtonL1.pressing()) {
+        rollersBottom.spin(reverse, 100, pct);
+      }
+      else {
+        rollersBottom.stop();
+      }
     }
     // scoring bottom top
     else if (Controller1.ButtonR2.pressing()) {
