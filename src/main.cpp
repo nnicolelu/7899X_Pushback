@@ -14,7 +14,7 @@ using namespace vex;
 competition Competition;
 
 // auton toggles: 0 = left, 1 = right, 2 = skills
-int autonToggle = 2;
+int autonToggle = 1;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -38,8 +38,8 @@ motor topIntake = motor(PORT3, ratio18_1, false);
 //pneumatics
 digital_out descore = digital_out(Brain.ThreeWirePort.G);
 digital_out matchLoader = digital_out(Brain.ThreeWirePort.H);
-digital_out stopPiston = digital_out(Brain.ThreeWirePort.E);
-digital_out frontDescore = digital_out(Brain.ThreeWirePort.F);
+digital_out stopPiston = digital_out(Brain.ThreeWirePort.F); // false = open true = close
+//digital_out frontDescore = digital_out(Brain.ThreeWirePort.F);
 
 // constants
 double pi = 3.1415926;
@@ -58,8 +58,14 @@ void descoreControl() {
 }
 
 void unloading() {
-  frontDescore.set(!frontDescore.value());
   stopPiston.set(!stopPiston.value());
+}
+
+// stop all rollers
+void stopAll() {
+  rollersBottom.stop();
+  rollersTop.stop();
+  topIntake.stop();
 }
 
 void drive(int lspeed, int rspeed, int wt) {
@@ -72,8 +78,8 @@ void drive(int lspeed, int rspeed, int wt) {
 // intake to the top goal
 void intakeTop() {
   rollersBottom.spin(reverse, 100, pct);
-  rollersTop.spin(forward, 100, pct);
-  topIntake.spin(forward, 90, pct);
+  rollersTop.spin(forward, 80, pct);
+  topIntake.spin(forward, 100, pct);
 }
 // intake to the middle top goal
 void intakemiddleTop() {
@@ -272,33 +278,27 @@ void autonomous(void) {
       gyroturnAbs(-180);
       inchDrive(15);
       wait(600, msec);
-      rollersBottom.stop();
-      rollersTop.stop();
-      topIntake.stop();
+      stopAll();
       stopPiston.set(false);
-      frontDescore.set(true);
       inchDrive(-26);
       matchLoader.set(false);
       intakeTop();
       break;
     case 1: // right side (works prety much)
       intakeTop();
-      stopPiston.set(true);
-      inchDrive(26);
-      gyroturnAbs(31.5, 800);
-      inchDrive(13, 900, 2.7);
-      gyroturnAbs(120);
-      inchDrive(31.5); // goijg to goal
-      matchLoader.set(true);
-      gyroturnAbs(185);
-      inchDrive(17, 800, 5);
-      wait(400, msec);
-      frontDescore.set(true);
-      rollersBottom.stop();
-      rollersTop.stop();
-      topIntake.stop();
       stopPiston.set(false);
-      inchDrive(-27, 1200, 3.8);
+      inchDrive(27);
+      gyroturnAbs(28.5, 800);
+      inchDrive(14, 900, 3); // 2.7
+      gyroturnAbs(120);
+      inchDrive(33); // goijg to goal
+      matchLoader.set(true);
+      gyroturnAbs(180);
+      inchDrive(20, 800, 4.2); // match loading
+      wait(450, msec);
+      stopAll();
+      stopPiston.set(true);
+      inchDrive(-30, 1200, 3.8);
       matchLoader.set(false);
       intakeTop();
       break;
@@ -361,10 +361,11 @@ void usercontrol(void) {
     // rotating the bottom rollers
     else if (Controller1.ButtonL1.pressing()) {
       rollersBottom.spin(reverse, 100, pct);
+      // scoring on the top
       if (Controller1.ButtonR1.pressing()) {
-        rollersTop.spin(forward, 100, pct);
+        rollersTop.spin(forward, 80, pct);
         topIntake.spin(forward, 100, pct);
-      }
+      } // scoring bottom top
       else if (Controller1.ButtonR2.pressing()) {
         rollersTop.spin(forward, 100, pct);
         topIntake.spin(reverse, 100, pct);        
@@ -385,18 +386,6 @@ void usercontrol(void) {
       topIntake.stop();
       rollersTop.stop();
     }
-    // top top
-    // if (Controller1.ButtonL1.pressing() && Controller1.ButtonR1.pressing()) {
-    //   rollersBottom.spin(reverse, 100, pct);
-    //   rollersTop.spin(forward, 100, pct);
-    //   topIntake.spin(forward, 100, pct);
-    // }
-    // bottom top
-    // else if (Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing()) {
-    //   rollersBottom.spin(reverse, 100, pct);
-    //   rollersTop.spin(forward, 100, pct);
-    //   topIntake.spin(reverse, 70, pct);     
-    // }
     /*
     if (Controller1.ButtonR1.pressing()) {
       rollersBottom.spin(reverse, 100, pct);
