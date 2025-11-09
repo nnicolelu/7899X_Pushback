@@ -14,11 +14,12 @@ using namespace vex;
 competition Competition;
 
 // auton toggles: 
-// 0 = left
-// 1 = right red (too close to the wall)
-// 2 = right blue (too far from the wall) use this one for right
-// 3 = skills
-int autonToggle = 0;
+// 0 = left blue (too close to the wall)
+// 1 = left red regular GOOD
+// 2 = right red (too close to the wall)
+// 3 = right blue regular GOOD
+// 4 = skills
+int autonToggle = 1;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -269,7 +270,7 @@ void pre_auton(void) {
 
 void autonomous(void) {
   switch(autonToggle) {
-    case 0: // left side
+    case 0: // left side too close to wall
       intakeTop();
       stopPiston.set(false);
       inchDrive(27);
@@ -289,7 +290,25 @@ void autonomous(void) {
       matchLoader.set(false);
       intakeTop();
       break;
-    case 1: // right red side (works prety much)
+    case 1: // left side regular
+      intakeTop();
+      stopPiston.set(false);
+      inchDrive(27);
+      gyroturnAbs(-25.5, 800);
+      inchDrive(14, 900, 3); // 2.7
+      gyroturnAbs(-120);
+      inchDrive(33);
+      matchLoader.set(true);
+      gyroturnAbs(-185);
+      inchDrive(18, 800, 4.2); // match loading
+      wait(450, msec);
+      stopAll();
+      stopPiston.set(true);
+      inchDrive(-31, 1200, 3.8);
+      matchLoader.set(false);
+      intakeTop();
+      break;
+    case 2: // right red side (works prety much)
       intakeTop();
       stopPiston.set(false);
       inchDrive(27);
@@ -307,7 +326,7 @@ void autonomous(void) {
       matchLoader.set(false);
       intakeTop();
       break;
-    case 2: // right blue side (use this one)
+    case 3: // right blue side (use this one)
       intakeTop();
       stopPiston.set(false);
       inchDrive(27);
@@ -327,7 +346,7 @@ void autonomous(void) {
       matchLoader.set(false);
       intakeTop();
       break;
-    case 3: // SKILLS
+    case 4: // SKILLS
       intakeTop();
       stopPiston.set(true);
       inchDrive(21);
