@@ -13,7 +13,11 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
-// auton toggles: 0 = left, 1 = right, 2 = skills
+// auton toggles: 
+// 0 = left
+// 1 = right red (too close to the wall)
+// 2 = right blue (too far from the wall) use this one for right
+// 3 = skills
 int autonToggle = 0;
 
 // define your global instances of motors and other devices here
@@ -285,7 +289,7 @@ void autonomous(void) {
       matchLoader.set(false);
       intakeTop();
       break;
-    case 1: // right side (works prety much)
+    case 1: // right red side (works prety much)
       intakeTop();
       stopPiston.set(false);
       inchDrive(27);
@@ -303,7 +307,27 @@ void autonomous(void) {
       matchLoader.set(false);
       intakeTop();
       break;
-    case 2: // SKILLS
+    case 2: // right blue side (use this one)
+      intakeTop();
+      stopPiston.set(false);
+      inchDrive(27);
+      gyroturnAbs(28.5, 800);
+      inchDrive(14, 900, 3); // 2.7
+      gyroturnAbs(120);
+      inchDrive(33); // goijg to goal
+      matchLoader.set(true);
+      gyroturnAbs(180);
+      inchDrive(18, 800, 4); // match loading
+      wait(500, msec);
+      stopAll();
+      stopPiston.set(true);
+      // inchDrive(-10, 1200, 3.8);
+      // gyroturnAbs(160);
+      inchDrive(-30, 1200, 3.8);
+      matchLoader.set(false);
+      intakeTop();
+      break;
+    case 3: // SKILLS
       intakeTop();
       stopPiston.set(true);
       inchDrive(21);
