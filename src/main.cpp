@@ -14,7 +14,7 @@ using namespace vex;
 competition Competition;
 
 // auton toggles: 0 = left, 1 = right, 2 = skills
-int autonToggle = 1;
+int autonToggle = 0;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -179,7 +179,6 @@ void inchDrive(float target, int timeout = 1200, float kp = 3.8) {
     Controller1.Screen.print(error);
     wait(10, msec);
   }
-  
   leftSide.stop(brake);
   rightSide.stop(brake);
   wait(10, msec);
@@ -244,13 +243,13 @@ void gyroturnAbs(double target, int timeout = 1200) {
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
-  // Gyro.calibrate();
-  // while (Gyro.isCalibrating()) {
-  //   wait(20, msec);
-  // }z
-  // wait(200, msec);
-  // Gyro.setHeading(0, deg);
-  // Gyro.setRotation(0, deg);
+  Gyro.calibrate();
+  while (Gyro.isCalibrating()) {
+    wait(20, msec);
+  }
+  wait(200, msec);
+  Gyro.setHeading(0, deg);
+  Gyro.setRotation(0, deg);
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
@@ -268,19 +267,21 @@ void autonomous(void) {
   switch(autonToggle) {
     case 0: // left side
       intakeTop();
-      stopPiston.set(true);
-      inchDrive(27.5);
-      gyroturnAbs(-31.5, 800);
-      inchDrive(13, 900, 2.7);
-      gyroturnAbs(-120);
-      inchDrive(32);
-      matchLoader.set(true);
-      gyroturnAbs(-180);
-      inchDrive(15);
-      wait(600, msec);
-      stopAll();
       stopPiston.set(false);
-      inchDrive(-26);
+      inchDrive(27);
+      gyroturnAbs(-25.5, 800);
+      inchDrive(14, 900, 3); // 2.7
+      gyroturnAbs(-120);
+      inchDrive(31.5);
+      matchLoader.set(true);
+      gyroturnAbs(-185);
+      inchDrive(18, 800, 4.2); // match loading
+      wait(470, msec);
+      stopAll();
+      stopPiston.set(true);
+      inchDrive(-10, 1200, 3.8);
+      gyroturnAbs(-200);
+      inchDrive(-20, 1200, 3.8);
       matchLoader.set(false);
       intakeTop();
       break;
@@ -418,10 +419,9 @@ void usercontrol(void) {
       topIntake.stop();
     }
     */
-    wait(20, msec);
+    wait(10, msec);
   }
 }
-
 
 int main() {
   // Set up callbacks for autonomous and driver control periods.
@@ -433,6 +433,6 @@ int main() {
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
-    wait(100, msec);
+    wait(10, msec); // 100
   }
 }
