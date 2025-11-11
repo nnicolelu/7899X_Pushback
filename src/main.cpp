@@ -19,7 +19,7 @@ competition Competition;
 // 2 = right red (too close to the wall)
 // 3 = right blue regular GOOD ---------
 // 4 = skills
-int autonToggle = 3;
+int autonToggle = 4;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -50,6 +50,7 @@ digital_out stopPiston = digital_out(Brain.ThreeWirePort.F); // false = open tru
 double pi = 3.1415926;
 double diameter = 3.25;
 double g = 36.0/48.0;
+double width = ;
 color blue = color(0, 0, 255);
 color red = color(255, 0, 0);
 
@@ -241,9 +242,37 @@ void gyroturnAbs(double target, int timeout = 1200) {
     rightSide.stop();
     wait(10, msec);
   }
-
-
-/*---------------------------------------------------------------------------*/
+// rd = radius of circular path
+void arcTurn(float rd, float angle, float maxSpeed = 100) {
+    float kp = 1.0;
+    float kd = 1.0;
+    float targetArcLength = rd * 2 * pi * (angle/360.0);
+    float arcLength = 0.0;
+    float error = targetArcLength - arcLength;
+    float oldError = error;
+    float lspeed = (maxSpeed * angle) / fabs(angle);
+    float rspeed = (lspeed * (rd - width)) / rd;
+    float accuracy = 0.2;
+    leftMiddle.setPosition(0.0, rev);
+    rightMiddle.setPosition(0.0, rev);
+    while (fabs(error) >= accuracy) {
+      DriveVolts(lspeed, rspeed, 1, 10);
+      arcLength = leftMiddle.position(rev) * g * pi * diameter;
+      oldError = error;
+      error = targetArcLength - arcLength;
+      lspeed = (kp * error) + (kd * (error-oldError));
+      if (fabs(lspeed) >= maxSpeed) {
+        lspeed = (maxSpeed * error) / fabs(error);
+        rspeed = (lspeed * (rd - width)) / rd;
+      }
+      leftSide.setStopping(brake);
+      rightSide.setStopping(brake);
+      leftSide.stop();
+      rightSide.stop();
+    }
+    
+}
+  /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
 /*                                                                           */
 /*  You may want to perform some actions before the competition starts.      */
@@ -300,18 +329,18 @@ void autonomous(void) {
       intakeTop();
       stopPiston.set(false);
       inchDrive(27);
-      gyroturnAbs(-25.5, 800);
+      gyroturnAbs(-25, 800);
       inchDrive(14, 900, 3); // 2.7
       gyroturnAbs(-120);
-      inchDrive(33);
+      inchDrive(34); // driving to match loader
       matchLoader.set(true);
       gyroturnAbs(-185);
       inchDrive(18, 800, 4.2); // match loading
-      wait(450, msec);
+      wait(410, msec);
       stopAll();
       stopPiston.set(true);
       inchDrive(-31, 1200, 3.8);
-      matchLoader.set(false);
+      //matchLoader.set(false);
       intakeTop();
       break;
     case 2: // right red side (works prety much)
@@ -337,13 +366,13 @@ void autonomous(void) {
       stopPiston.set(false);
       inchDrive(27);
       gyroturnAbs(28.5, 800);
-      inchDrive(14, 900, 3); // 2.7
+      inchDrive(14, 900, 3);
       gyroturnAbs(120);
       inchDrive(33.5); // goijg to goal
       matchLoader.set(true);
       gyroturnAbs(178);
       inchDrive(18, 800, 4.2); // match loading
-      wait(480, msec);
+      wait(480, msec); // need to lessen this mayb
       stopAll();
       stopPiston.set(true);
       inchDrive(-30, 1200, 3.8);
@@ -353,13 +382,13 @@ void autonomous(void) {
     case 4: // SKILLS
       intakeTop();
       stopPiston.set(false);
-      inchDrive(21, 900);
+      inchDrive(21, 800);
       gyroturnAbs(34, 600);
-      inchDrive(20, 900);
-      gyroturnAbs(130);
-      inchDrive(31); // drive to goal
+      inchDrive(20, 800);
+      gyroturnAbs(130, 850); // 900
+      inchDrive(32, 950); // drive to goal // 1000
       matchLoader.set(true);
-      gyroturnAbs(176);
+      gyroturnAbs(180, 800); // turn to match load
       inchDrive(18, 2100, 4.2);
       wait(200, msec);
       stopTop();
