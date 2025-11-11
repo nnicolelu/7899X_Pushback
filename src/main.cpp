@@ -73,6 +73,12 @@ void stopAll() {
   topIntake.stop();
 }
 
+// stop top rollers
+void stopTop() {
+  rollersTop.stop();
+  topIntake.stop();
+}
+
 void drive(int lspeed, int rspeed, int wt) {
   leftSide.spin(forward, lspeed, pct);
   rightSide.spin(forward, rspeed, pct);
@@ -349,18 +355,25 @@ void autonomous(void) {
     case 4: // SKILLS
       intakeTop();
       stopPiston.set(false);
-      inchDrive(21);
-      gyroturnAbs(34, 1000);
-      inchDrive(20);
+      inchDrive(21, 900);
+      gyroturnAbs(34, 600);
+      inchDrive(20, 900);
       gyroturnAbs(130);
-      inchDrive(31.5); // drive to goal
+      inchDrive(31); // drive to goal
       matchLoader.set(true);
-      gyroturnAbs(180);
-      inchDrive(18, 1600, 4);
-      stopAll();
+      gyroturnAbs(176);
+      inchDrive(18, 2100, 4.2);
+      wait(200, msec);
+      stopTop();
       stopPiston.set(true);
-      inchDrive(-32, 1200, 3.8);
-      intakeTop();
+      inchDrive(-32, 1500, 3.8);
+      intakeTop(); // end first goal
+      wait(2000, msec);
+      stopAll();
+      inchDrive(20, 800); 
+      gyroturnAbs(70); // can be turned into arc turn
+      inchDrive(25); // can be turned into arc turn
+      gyroturnAbs(90); // can be turned into arc turn
       break;
   }
 }
