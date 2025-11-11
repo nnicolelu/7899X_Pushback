@@ -15,11 +15,11 @@ competition Competition;
 
 // auton toggles: 
 // 0 = left blue (too close to the wall)
-// 1 = left red regular GOOD
+// 1 = left red regular GOOD -------
 // 2 = right red (too close to the wall)
-// 3 = right blue regular GOOD
+// 3 = right blue regular GOOD ---------
 // 4 = skills
-int autonToggle = 1;
+int autonToggle = 4;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -348,14 +348,19 @@ void autonomous(void) {
       break;
     case 4: // SKILLS
       intakeTop();
-      stopPiston.set(true);
+      stopPiston.set(false);
       inchDrive(21);
       gyroturnAbs(34, 1000);
       inchDrive(20);
       gyroturnAbs(130);
-      inchDrive(30);
+      inchDrive(31.5); // drive to goal
       matchLoader.set(true);
       gyroturnAbs(180);
+      inchDrive(18, 1600, 4);
+      stopAll();
+      stopPiston.set(true);
+      inchDrive(-32, 1200, 3.8);
+      intakeTop();
       break;
   }
 }
