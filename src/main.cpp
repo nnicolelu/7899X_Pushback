@@ -19,6 +19,7 @@ competition Competition;
 // 2 = right red (too close to the wall)
 // 3 = right blue regular GOOD ---------
 // 4 = skills
+// 5 = random testing
 int autonToggle = 4;
 
 // define your global instances of motors and other devices here
@@ -50,9 +51,7 @@ digital_out stopPiston = digital_out(Brain.ThreeWirePort.F); // false = open tru
 double pi = 3.1415926;
 double diameter = 3.25;
 double g = 36.0/48.0;
-double width = ;
-color blue = color(0, 0, 255);
-color red = color(255, 0, 0);
+double width = 13.75;
 
 // piston controls
 void loaderControl() {
@@ -244,7 +243,7 @@ void gyroturnAbs(double target, int timeout = 1200) {
   }
 // rd = radius of circular path
 void arcTurn(float rd, float angle, float maxSpeed = 100) {
-    float kp = 1.0;
+    float kp = 12.0;
     float kd = 1.0;
     float targetArcLength = rd * 2 * pi * (angle/360.0);
     float arcLength = 0.0;
@@ -265,12 +264,11 @@ void arcTurn(float rd, float angle, float maxSpeed = 100) {
         lspeed = (maxSpeed * error) / fabs(error);
         rspeed = (lspeed * (rd - width)) / rd;
       }
-      leftSide.setStopping(brake);
-      rightSide.setStopping(brake);
-      leftSide.stop();
-      rightSide.stop();
+      // leftSide.setStopping(brake);
+      // rightSide.setStopping(brake);
+      // leftSide.stop();
+      // rightSide.stop();
     }
-    
 }
   /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -385,22 +383,34 @@ void autonomous(void) {
       inchDrive(21, 800);
       gyroturnAbs(34, 600);
       inchDrive(20, 800);
-      gyroturnAbs(130, 850); // 900
-      inchDrive(32, 950); // drive to goal // 1000
+      gyroturnAbs(125, 850); // 900
+      inchDrive(31.8, 950); // drive to goal // 1000
       matchLoader.set(true);
-      gyroturnAbs(180, 800); // turn to match load
+      gyroturnAbs(176, 800); // turn to match load
       inchDrive(18, 2100, 4.2);
       wait(200, msec);
       stopTop();
       stopPiston.set(true);
       inchDrive(-32, 1500, 3.8);
-      intakeTop(); // end first goal
+      intakeTop(); 
       wait(2000, msec);
-      stopAll();
-      inchDrive(20, 800); 
-      gyroturnAbs(70); // can be turned into arc turn
-      inchDrive(25); // can be turned into arc turn
-      gyroturnAbs(90); // can be turned into arc turn
+      stopAll(); // end first goal
+      matchLoader.set(false);
+      inchDrive(15, 590);
+      gyroturnAbs(-80); // EDIT TIMES
+      inchDrive(-15);
+      gyroturnAbs(0);
+      descore.set(true);
+      inchDrive(115, 2000, 3.2);
+      inchDrive(-20);
+      // inchDrive(15, 590);
+      // gyroturnAbs(-175, 650);
+      // inchDrive(115, 1900, 3);
+      // inchDrive(-30);
+      // gyroturnAbs(-60);
+      break;
+    case 5: // random testing
+
       break;
   }
 }
