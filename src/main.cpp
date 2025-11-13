@@ -421,12 +421,12 @@ void autonomous(void) {
       inchDrive(15, 575);
       gyroturnAbs(-83, 655);
       inchDrive(116, 1950, 3.2); // wall reset
-      inchDrive(-13, 600);
+      inchDrive(-15.3, 600);
       matchLoader.set(true);
       gyroturnAbs(0, 800);
       stopPiston.set(false);
       intakeTop();
-      inchDrive(20, 2100, 4);
+      inchDrive(22, 2100, 4.2); // at match loader
       stopTop();
       stopPiston.set(true);
       inchDrive(-32, 1400, 3.8);
