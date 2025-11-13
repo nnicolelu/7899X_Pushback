@@ -18,9 +18,9 @@ competition Competition;
 // 1 = left red regular GOOD -------
 // 2 = right red (too close to the wall)
 // 3 = right blue regular GOOD ---------
-// 4 = skills
-// 5 = random testing
-int autonToggle = 4;
+// 4 = skills 1-5
+// 5 = skills 5+
+int autonToggle = 5;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -391,7 +391,7 @@ void autonomous(void) {
       wait(150, msec);
       stopTop();
       stopPiston.set(true);
-      inchDrive(-32, 1500, 3.8);
+      inchDrive(-32, 1450, 3.8);
       intakeTop(); 
       wait(2000, msec);
       stopAll(); // end first goal
@@ -403,14 +403,13 @@ void autonomous(void) {
       descore.set(true);
       inchDrive(115, 2000, 3.2); // wall reset
       inchDrive(-30, 900);
-      gyroturnAbs(-45, 900);
-      inchDrive(17.5);
+      gyroturnAbs(-45, 850);
+      inchDrive(17.5, 900);
       matchLoader.set(true);
       gyroturnAbs(0);
       stopPiston.set(false);
       intakeTop();
-      inchDrive(15, 2100, 4); // added from here
-      wait(150, msec);
+      inchDrive(15, 2100, 4);
       stopTop();
       stopPiston.set(true);
       inchDrive(-32, 1500, 3.8);
@@ -418,7 +417,23 @@ void autonomous(void) {
       wait(2000, msec);
       stopAll(); // end second goal
       matchLoader.set(false);
-    case 5: // random testing
+    case 5: // starting from step 6
+      inchDrive(15, 575);
+      gyroturnAbs(-83, 655);
+      inchDrive(116, 1950, 3.2); // wall reset
+      inchDrive(-13, 600);
+      matchLoader.set(true);
+      gyroturnAbs(0, 800);
+      stopPiston.set(false);
+      intakeTop();
+      inchDrive(20, 2100, 4);
+      stopTop();
+      stopPiston.set(true);
+      inchDrive(-32, 1400, 3.8);
+      intakeTop();
+      wait(2000, msec);
+      stopAll();
+      matchLoader.set(false); // end third goal
       break;
   }
 }
