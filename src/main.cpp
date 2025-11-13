@@ -399,11 +399,11 @@ void autonomous(void) {
       inchDrive(15, 590);
       gyroturnAbs(-80); // EDIT TIMES
       inchDrive(-15, 700);
-      gyroturnAbs(0, 1000);
+      gyroturnAbs(0, 900);
       descore.set(true);
       inchDrive(115, 2000, 3.2); // wall reset
-      inchDrive(-30);
-      gyroturnAbs(-45);
+      inchDrive(-30, 900);
+      gyroturnAbs(-45, 900);
       inchDrive(17.5);
       matchLoader.set(true);
       gyroturnAbs(0);
@@ -414,8 +414,11 @@ void autonomous(void) {
       stopTop();
       stopPiston.set(true);
       inchDrive(-32, 1500, 3.8);
+      intakeTop();
+      wait(2000, msec);
+      stopAll(); // end second goal
+      matchLoader.set(false);
     case 5: // random testing
-
       break;
   }
 }
