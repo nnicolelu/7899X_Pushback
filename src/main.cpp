@@ -383,12 +383,12 @@ void autonomous(void) {
       inchDrive(21, 800);
       gyroturnAbs(34, 600);
       inchDrive(20, 800);
-      gyroturnAbs(125, 850); // 900
-      inchDrive(31.8, 950); // drive to goal // 1000
+      gyroturnAbs(125, 850); 
+      inchDrive(30.8, 950); // drive to goal
       matchLoader.set(true);
       gyroturnAbs(176, 800); // turn to match load
-      inchDrive(18, 2100, 4.2);
-      wait(200, msec);
+      inchDrive(18, 2100, 3.8); // match loading
+      wait(150, msec);
       stopTop();
       stopPiston.set(true);
       inchDrive(-32, 1500, 3.8);
@@ -398,17 +398,22 @@ void autonomous(void) {
       matchLoader.set(false);
       inchDrive(15, 590);
       gyroturnAbs(-80); // EDIT TIMES
-      inchDrive(-15);
-      gyroturnAbs(0);
+      inchDrive(-15, 700);
+      gyroturnAbs(0, 1000);
       descore.set(true);
-      inchDrive(115, 2000, 3.2);
-      inchDrive(-20);
-      // inchDrive(15, 590);
-      // gyroturnAbs(-175, 650);
-      // inchDrive(115, 1900, 3);
-      // inchDrive(-30);
-      // gyroturnAbs(-60);
-      break;
+      inchDrive(115, 2000, 3.2); // wall reset
+      inchDrive(-30);
+      gyroturnAbs(-45);
+      inchDrive(17.5);
+      matchLoader.set(true);
+      gyroturnAbs(0);
+      stopPiston.set(false);
+      intakeTop();
+      inchDrive(15, 2100, 4); // added from here
+      wait(150, msec);
+      stopTop();
+      stopPiston.set(true);
+      inchDrive(-32, 1500, 3.8);
     case 5: // random testing
 
       break;
