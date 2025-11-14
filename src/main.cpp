@@ -25,11 +25,11 @@ int autonToggle = 5;
 // define your global instances of motors and other devices here
 brain Brain;
 controller Controller1;
-inertial Gyro = inertial(PORT16);
+inertial Gyro = inertial(PORT19);
 //drivebase
 motor leftFront = motor(PORT5, ratio6_1, false);
 motor leftMiddle = motor(PORT6, ratio6_1, false);
-motor leftBack = motor(PORT7, ratio6_1, false);
+motor leftBack = motor(PORT13, ratio6_1, false);
 motor rightFront = motor(PORT11, ratio6_1, true);
 motor rightMiddle = motor(PORT1, ratio6_1, true);
 motor rightBack = motor(PORT2, ratio6_1, true);
@@ -419,17 +419,18 @@ void autonomous(void) {
       matchLoader.set(false);
     case 5: // starting from step 6
       inchDrive(15, 575);
-      gyroturnAbs(-83, 655);
-      inchDrive(116, 1950, 3.2); // wall reset
-      inchDrive(-15.3, 600);
+      gyroturnAbs(-80, 655);
+      inchDrive(118, 1950, 3.2); // wall reset
+      inchDrive(-16.3, 600);
+      gyroturnAbs(0, 900); // rigyt angle 340
       matchLoader.set(true);
-      gyroturnAbs(0, 800);
-      stopPiston.set(false);
+      inchDrive(-15, 900);
       intakeTop();
-      inchDrive(22, 2100, 4.2); // at match loader
+      stopPiston.set(false);
+      inchDrive(33, 2200, 3.8); // match loading
       stopTop();
       stopPiston.set(true);
-      inchDrive(-32, 1400, 3.8);
+      inchDrive(-32, 1400, 2.9);
       intakeTop();
       wait(2000, msec);
       stopAll();
