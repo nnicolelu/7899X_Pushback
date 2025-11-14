@@ -420,17 +420,18 @@ void autonomous(void) {
     case 5: // starting from step 6
       inchDrive(15, 575);
       gyroturnAbs(-80, 655);
-      inchDrive(118, 1950, 3.2); // wall reset
-      inchDrive(-16.3, 600);
+      inchDrive(118, 1950, 3); // wall reset
+      inchDrive(-17.5, 600);
       gyroturnAbs(0, 900); // rigyt angle 340
       matchLoader.set(true);
-      inchDrive(-15, 900);
+      inchDrive(-22, 1200, 3.5);
       intakeTop();
       stopPiston.set(false);
-      inchDrive(33, 2200, 3.8); // match loading
+      inchDrive(33, 2200, 3.4); // match loading
       stopTop();
+      gyroturnAbs(-10);
       stopPiston.set(true);
-      inchDrive(-32, 1400, 2.9);
+      inchDrive(-32, 1400, 2.6); // driving to goal
       intakeTop();
       wait(2000, msec);
       stopAll();
