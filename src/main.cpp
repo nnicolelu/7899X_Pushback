@@ -14,13 +14,12 @@ using namespace vex;
 competition Competition;
 
 // auton toggles: 
-// 0 = left blue (too close to the wall)
-// 1 = left red regular GOOD -------
-// 2 = right red (too close to the wall)
-// 3 = right blue regular GOOD ---------
-// 4 = skills 1-5
-// 5 = skills 5+
-int autonToggle = 3;
+// 0 = left GOOD
+// 1 = rightGood
+// 3 = skills 1 & 2
+// 4 = skills 3
+// 5 = skills goal 4
+int autonToggle = 0;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -299,16 +298,20 @@ void goodLeftSideAuto() {
   gyroturnAbs(-25, 800);
   inchDrive(14, 900, 3); // 2.7
   gyroturnAbs(-120);
-  inchDrive(35); // driving to match loader
+  inchDrive(36.5); // driving to match loader
   matchLoader.set(true);
-  gyroturnAbs(-185);
+  gyroturnAbs(-182); // 185
   inchDrive(18, 800, 3.4); // match loading
-  wait(250, msec);
+  wait(350, msec);
   stopAll();
   stopPiston.set(true);
   matchLoader.set(false);
   inchDrive(-32, 1200, 2.6);
   intakeTop();
+  wait(2000, msec);
+  inchDrive(10);
+  stopPiston.set(false);
+  inchDrive(-19, 2000, 4);
 }
 
 void brokenRightSideAuto() {
@@ -333,24 +336,24 @@ void brokenRightSideAuto() {
 void goodRightSideAuto() {
   intakeTop();
   stopPiston.set(false);
-  inchDrive(27);
-  gyroturnAbs(27, 800);
+  inchDrive(27, 1000);
+  gyroturnAbs(27, 750); // 800
   inchDrive(14, 900, 3);
-  gyroturnAbs(120);
-  inchDrive(34); // goijg to goal
+  gyroturnAbs(120, 900);
+  inchDrive(35.3, 1000); // goijg to goal
   matchLoader.set(true);
   gyroturnAbs(178);
   inchDrive(18, 800, 3.4); // match loading
-  wait(430, msec); // need to lessen this mayb
+  wait(480, msec); // need to lessen this mayb
   stopAll();
   stopPiston.set(true);
   matchLoader.set(false);
-  inchDrive(-31, 1200, 2.6);
+  inchDrive(-32.5, 1200, 2.6);
   intakeTop();
   wait(2000, msec);
   inchDrive(10);
   stopPiston.set(false);
-  inchDrive(-11, 4.2);
+  inchDrive(-19, 2000, 4);
 }
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -385,58 +388,54 @@ void pre_auton(void) {
 
 void autonomous(void) {
   switch(autonToggle) {
-    case 0: // left side doesnt work
-      brokenLeftSideAuto();
-      break;
-    case 1: // left side regular
+    case 0: // left side regular
       goodLeftSideAuto();
       break;
-    case 2: // right side doesnt work
-      brokenRightSideAuto();
-      break;
-    case 3: // right side regular
+    case 1: // right side doesnt work
       goodRightSideAuto();
       break;
-    case 4: // SKILLS 1-5
+    case 3: // SKILLS 1-5
       intakeTop();
       stopPiston.set(false);
-      inchDrive(21, 800);
-      gyroturnAbs(34, 600);
-      inchDrive(20, 800);
-      gyroturnAbs(125, 850); 
+      inchDrive(21, 790);
+      gyroturnAbs(34, 550);
+      inchDrive(20, 790);
+      gyroturnAbs(125, 830); 
       inchDrive(30.8, 950); // drive to goal
       matchLoader.set(true);
-      gyroturnAbs(176, 800); // turn to match load
-      inchDrive(18, 2100, 3.8); // match loading
-      wait(150, msec);
+      gyroturnAbs(176, 780); // turn to match load
+      inchDrive(15.5, 1800, 3.1); // match loading
+      wait(450, msec);
       stopTop();
       stopPiston.set(true);
-      inchDrive(-32, 1450, 3.8);
+      inchDrive(-32, 1450, 2.6);
       intakeTop(); 
       wait(2000, msec);
       stopAll(); // end first goal
+    case 4:
       matchLoader.set(false);
       inchDrive(15, 590);
       gyroturnAbs(-80); // TIME
       inchDrive(-15, 700);
       gyroturnAbs(0, 900);
       descore.set(true);
-      inchDrive(115, 2000, 3.2); // wall reset
+      inchDrive(118, 2000, 3.2); // wall reset
       inchDrive(-30, 900);
       gyroturnAbs(-45, 850);
-      inchDrive(17.5, 900);
+      inchDrive(16.5, 900);
       matchLoader.set(true);
       gyroturnAbs(0);
       stopPiston.set(false);
       intakeTop();
-      inchDrive(15, 2100, 4);
+      inchDrive(19, 2100, 3.2); // match loading
       stopTop();
       stopPiston.set(true);
-      inchDrive(-32, 1500, 3.8);
+      inchDrive(-32, 1500, 2.6); // scoring
       intakeTop();
       wait(2000, msec);
       stopAll(); // end second goal
       matchLoader.set(false);
+      break;
     case 5: // SKILLS 6-8
       inchDrive(15, 575);
       gyroturnAbs(-80, 655);
@@ -456,6 +455,7 @@ void autonomous(void) {
       wait(2000, msec);
       stopAll();
       matchLoader.set(false); // end third goal
+      break;
     case 6:
       inchDrive(15, 590);
       gyroturnAbs(130, 850);
@@ -501,7 +501,7 @@ void usercontrol(void) {
     Brain.Screen.print("top voltage: ");
     Brain.Screen.print(rollersTop.voltage(volt));
     Brain.Screen.newLine();
-    double sensitivity = 1;
+    double sensitivity = 0.7;
     int leftSpeed = (Controller1.Axis3.position(pct) + Controller1.Axis1.position(pct)) * sensitivity;
     int rightSpeed = (Controller1.Axis3.position(pct) - Controller1.Axis1.position(pct)) * sensitivity;
     drive (leftSpeed, rightSpeed, 10);
