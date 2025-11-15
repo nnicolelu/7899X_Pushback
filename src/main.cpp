@@ -20,7 +20,7 @@ competition Competition;
 // 3 = right blue regular GOOD ---------
 // 4 = skills 1-5
 // 5 = skills 5+
-int autonToggle = 6;
+int autonToggle = 3;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -299,14 +299,15 @@ void goodLeftSideAuto() {
   gyroturnAbs(-25, 800);
   inchDrive(14, 900, 3); // 2.7
   gyroturnAbs(-120);
-  inchDrive(34); // driving to match loader
+  inchDrive(35); // driving to match loader
   matchLoader.set(true);
   gyroturnAbs(-185);
-  inchDrive(18, 800, 4.2); // match loading
-  wait(410, msec);
+  inchDrive(18, 800, 3.4); // match loading
+  wait(250, msec);
   stopAll();
   stopPiston.set(true);
-  inchDrive(-31, 1200, 3.8);
+  matchLoader.set(false);
+  inchDrive(-32, 1200, 2.6);
   intakeTop();
 }
 
@@ -333,19 +334,23 @@ void goodRightSideAuto() {
   intakeTop();
   stopPiston.set(false);
   inchDrive(27);
-  gyroturnAbs(28.5, 800);
+  gyroturnAbs(27, 800);
   inchDrive(14, 900, 3);
   gyroturnAbs(120);
-  inchDrive(33.5); // goijg to goal
+  inchDrive(34); // goijg to goal
   matchLoader.set(true);
   gyroturnAbs(178);
-  inchDrive(18, 800, 4.2); // match loading
-  wait(480, msec); // need to lessen this mayb
+  inchDrive(18, 800, 3.4); // match loading
+  wait(430, msec); // need to lessen this mayb
   stopAll();
   stopPiston.set(true);
-  inchDrive(-30, 1200, 3.8);
   matchLoader.set(false);
+  inchDrive(-31, 1200, 2.6);
   intakeTop();
+  wait(2000, msec);
+  inchDrive(10);
+  stopPiston.set(false);
+  inchDrive(-11, 4.2);
 }
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
