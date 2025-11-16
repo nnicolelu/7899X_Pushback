@@ -440,22 +440,22 @@ void autonomous(void) {
       inchDrive(15, 575);
       gyroturnAbs(-80, 655);
       inchDrive(118, 1950, 3); // wall reset
-      inchDrive(-16.5, 600);
+      inchDrive(-17.2, 600);
       gyroturnAbs(0, 900); // rigyt angle 340
       matchLoader.set(true);
-      inchDrive(-24, 1000, 3.5);
+      inchDrive(-24, 1000, 3.5); // driving backwards to goal
+      gyroturnAbs(-175, 90); // extra turning
       intakeTop();
       stopPiston.set(false);
-      inchDrive(34, 2000, 3.2); // match loading
+      inchDrive(35, 2100, 3); // match loading
       stopTop();
-      gyroturnAbs(-10);
+      gyroturnAbs(-6);
       stopPiston.set(true);
       inchDrive(-32, 1400, 2.7); // driving to goal
       intakeTop();
       wait(2000, msec);
       stopAll();
       matchLoader.set(false); // end third goal
-      break;
     case 6: // parking from 3rd
       inchDrive(15, 590);
       gyroturnAbs(130, 850);
@@ -466,10 +466,10 @@ void autonomous(void) {
       stopAll();
       rollersBottom.spin(forward, 100, pct);
       gyroturnAbs(176, 800);
-      inchDrive(86);
+      inchDrive(100, 2100, 3.2);
       rollersBottom.stop();
       gyroturnAbs(87);
-      inchDrive(38, 1200, 4);
+      inchDrive(40, 1200, 4);
       break;
     case 7: // wip 4th goal
       inchDrive(15, 590);
