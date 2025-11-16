@@ -20,7 +20,7 @@ competition Competition;
 // 4 = skills goal 2
 // 5 = skills goal 3
 // 6 = skills park
-int autonToggle = 3;
+int autonToggle = 1;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -345,7 +345,7 @@ void goodRightSideAuto() {
   matchLoader.set(true);
   gyroturnAbs(178);
   inchDrive(18, 800, 3.2); // match loading
-  wait(480, msec); // need to lessen this mayb
+  wait(380, msec); // need to lessen this mayb
   stopAll();
   stopPiston.set(true);
   // matchLoader.set(false);
@@ -411,7 +411,7 @@ void autonomous(void) {
       stopPiston.set(true);
       inchDrive(-32, 1450, 2.6);
       intakeTop();
-      wait(2100, msec);
+      wait(3000, msec);
       stopAll(); // end first goal
     case 4:
       matchLoader.set(false);
@@ -432,7 +432,7 @@ void autonomous(void) {
       stopPiston.set(true);
       inchDrive(-32, 1500, 2.6); // scoring
       intakeTop();
-      wait(2100, msec);
+      wait(3000, msec);
       stopAll(); // end second goal
       matchLoader.set(false);
     case 5: // SKILLS 6-8
@@ -452,7 +452,7 @@ void autonomous(void) {
       stopPiston.set(true);
       inchDrive(-32, 1400, 2.7); // driving to goal
       intakeTop();
-      wait(2000, msec);
+      wait(3000, msec);
       stopAll();
       matchLoader.set(false); // end third goal
     case 6: // parking from 3rd
@@ -468,7 +468,8 @@ void autonomous(void) {
       inchDrive(91, 2100, 3.2);
       rollersBottom.stop();
       gyroturnAbs(87, 300);
-      inchDrive(46, 1200, 4);
+      intakeTop();
+      inchDrive(50, 1200, 4);
       break;
     case 7: // wip 4th goal
       inchDrive(15, 590);
