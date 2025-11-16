@@ -16,10 +16,11 @@ competition Competition;
 // auton toggles: 
 // 0 = left GOOD
 // 1 = rightGood
-// 3 = skills 1 & 2
-// 4 = skills 3
-// 5 = skills goal 4
-int autonToggle = 1;
+// 3 = skills goal 1
+// 4 = skills goal 2
+// 5 = skills goal 3
+// 6 = skills park
+int autonToggle = 5;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -340,14 +341,14 @@ void goodRightSideAuto() {
   gyroturnAbs(27, 750); // 800
   inchDrive(14, 900, 3);
   gyroturnAbs(120, 900);
-  inchDrive(35.3, 1000); // goijg to goal
+  inchDrive(33.2, 1000); // goijg to goal
   matchLoader.set(true);
   gyroturnAbs(178);
-  inchDrive(18, 800, 3.4); // match loading
+  inchDrive(18, 800, 3.2); // match loading
   wait(480, msec); // need to lessen this mayb
   stopAll();
   stopPiston.set(true);
-  matchLoader.set(false);
+  // matchLoader.set(false);
   inchDrive(-32.5, 1200, 2.6);
   intakeTop();
   wait(2000, msec);
@@ -401,15 +402,15 @@ void autonomous(void) {
       gyroturnAbs(34, 540);
       inchDrive(20, 780);
       gyroturnAbs(125, 830); 
-      inchDrive(30.8, 950); // drive to goal
+      inchDrive(31, 950); // drive to goal
       matchLoader.set(true);
       gyroturnAbs(176, 780); // turn to match load
-      inchDrive(15.5, 1800, 3.1); // match loading
-      wait(500, msec);
+      inchDrive(15.5, 1800, 3.5); // match loading
+      wait(700, msec);
       stopTop();
       stopPiston.set(true);
       inchDrive(-32, 1450, 2.6);
-      intakeTop(); 
+      intakeTop();
       wait(2100, msec);
       stopAll(); // end first goal
     case 4:
@@ -419,21 +420,22 @@ void autonomous(void) {
       inchDrive(-14, 700);
       gyroturnAbs(0, 900);
       descore.set(true);
-      inchDrive(85, 2000, 3.0); // wall reset
+      inchDrive(80, 2000, 3.0); // wall reset
       gyroturnAbs(-45, 850);
-      inchDrive(20, 900);
+      inchDrive(19, 900); // drive to goal
       matchLoader.set(true);
       gyroturnAbs(0);
       stopPiston.set(false);
       intakeTop();
-      inchDrive(19, 2100, 3.2); // match loading
+      inchDrive(19, 2100, 3.5); // match loading
       stopTop();
       stopPiston.set(true);
       inchDrive(-32, 1500, 2.6); // scoring
       intakeTop();
-      wait(1900, msec);
+      wait(2100, msec);
       stopAll(); // end second goal
       matchLoader.set(false);
+      break;
     case 5: // SKILLS 6-8
       inchDrive(15, 575);
       gyroturnAbs(-80, 655);
@@ -453,6 +455,7 @@ void autonomous(void) {
       wait(2000, msec);
       stopAll();
       matchLoader.set(false); // end third goal
+      break;
     case 6: // parking from 3rd
       inchDrive(15, 590);
       gyroturnAbs(130, 850);
@@ -465,8 +468,8 @@ void autonomous(void) {
       gyroturnAbs(176, 800);
       inchDrive(86);
       rollersBottom.stop();
-      gyroturnAbs(-90);
-      inchDrive(40, 1200, 4);
+      gyroturnAbs(87);
+      inchDrive(38, 1200, 4);
       break;
     case 7: // wip 4th goal
       inchDrive(15, 590);
