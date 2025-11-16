@@ -20,7 +20,7 @@ competition Competition;
 // 4 = skills goal 2
 // 5 = skills goal 3
 // 6 = skills park
-int autonToggle = 1;
+int autonToggle = 5;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -341,7 +341,7 @@ void goodRightSideAuto() {
   gyroturnAbs(27, 750); // 800
   inchDrive(14, 900, 3);
   gyroturnAbs(120, 900);
-  inchDrive(33.2, 1000); // goijg to goal
+  inchDrive(33.8, 1000); // goijg to goal // og: 33 // middle field: 33.8
   matchLoader.set(true);
   gyroturnAbs(178);
   inchDrive(18, 800, 3.2); // match loading
@@ -465,7 +465,7 @@ void autonomous(void) {
       stopAll();
       rollersBottom.spin(forward, 100, pct);
       gyroturnAbs(176, 800);
-      inchDrive(91, 2100, 3.2);
+      inchDrive(96, 2100, 3.2);
       rollersBottom.stop();
       gyroturnAbs(87, 300);
       intakeTop();
