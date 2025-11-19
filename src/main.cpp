@@ -333,7 +333,7 @@ void WPRight() {
   inchDrive(5, 600);
   gyroturnAbs(58, 580);
   matchLoader.set(false);
-  inchDrive(32, 650); // going under
+  inchDrive(33, 650); // going under
   matchLoader.set(true);
   intakeBottom();
   wait(500, msec);
@@ -343,11 +343,11 @@ void WPRight() {
   gyroturnAbs(-38, 690);
   intakeMiddleBottom(); // scoring
   inchDrive(18, 700);
-  wait(450, msec);
+  wait(460, msec);
   intakeTop();
-  inchDrive(-49); // going to goal
+  inchDrive(-49, 1100); // going to goal
   matchLoader.set(true);
-  gyroturnAbs(-173);
+  gyroturnAbs(-173, 1000);
   inchDrive(19, 800, 3.1); // match loading
   wait(380, msec);
   stopAll();
