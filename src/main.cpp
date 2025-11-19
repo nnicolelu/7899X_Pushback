@@ -22,7 +22,7 @@ competition Competition;
 // 5 = skills goal 2
 // 6 = skills goal 3
 // 7 = skills park
-int autonToggle = 2;
+int autonToggle = 1;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -302,25 +302,31 @@ void longGoalLeft() {
 void longGoalRight() {
   intakeTop();
   stopPiston.set(false);
-  inchDrive(27, 1000);
-  gyroturnAbs(27, 750); // 800
-  inchDrive(14, 900, 3);
-  gyroturnAbs(120, 900);
-  inchDrive(33.8, 1000); // goijg to goal // og: 33 // middle field: 33.8 // lessen if goal is more on the left
+  inchDrive(30, 680); // drive to 3 blocks
+  gyroturnAbs(28, 390); // turn for 3 blocks
+  inchDrive(7, 700); // getting blocks
   matchLoader.set(true);
-  gyroturnAbs(178);
+  inchDrive(5, 500);
+  gyroturnAbs(120, 720);
+  inchDrive(36.5, 880); // goijg to goal // og: 33 // middle field: 33.8 // lessen if goal is more on the left
+  matchLoader.set(true);
+  gyroturnAbs(179, 770);
   inchDrive(18, 800, 3.2); // match loading
-  wait(380, msec); // need to lessen this mayb
+  wait(290, msec); // need to lessen this mayb
   stopTop();
   stopPiston.set(true);
-  // matchLoader.set(false);
-  inchDrive(-32.5, 1200, 2.6);
+  inchDrive(-32, 1200, 2.6);
   intakeTop();
-  wait(2500, msec);
-  intakeStop();
-  inchDrive(10);
-  stopPiston.set(false);
-  inchDrive(-19, 2000, 4);
+  wait(2300, msec);
+  intakeStop(); // done with goal
+  inchDrive(10, 500);
+  gyroturnAbs(270, 700);
+  inchDrive(13, 500);
+  gyroturnAbs(186, 650);
+  descore.set(false);
+  inchDrive(-25);
+  leftSide.stop(hold);
+  rightSide.stop(hold);
 }
 
 void WPRight() {
