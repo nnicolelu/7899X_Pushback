@@ -14,13 +14,15 @@ using namespace vex;
 competition Competition;
 
 // auton toggles: 
-// 0 = left GOOD
-// 1 = rightGood
-// 3 = skills goal 1
-// 4 = skills goal 2
-// 5 = skills goal 3
-// 6 = skills park
-int autonToggle = 5;
+// 0 = Left Long Goal
+// 1 = Right Long Goal
+// 2 = WP Right
+// 3 = WP Left
+// 4 = skills goal 1
+// 5 = skills goal 2
+// 6 = skills goal 3
+// 7 = skills park
+int autonToggle = 2;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -92,6 +94,10 @@ void intakeTop() {
   rollersTop.spin(forward, 80, pct);
   topIntake.spin(forward, 100, pct);
 }
+// intake just the bottom intake
+void intakeBottom() {
+  rollersBottom.spin(reverse, 100, pct);
+}
 // intake to the middle top goal
 void intakemiddleTop() {
   rollersBottom.spin(reverse, 100, pct);
@@ -100,7 +106,7 @@ void intakemiddleTop() {
 }
 // intake to the middle bottom goal
 void intakeMiddleBottom() {
-  rollersBottom.spin(forward, 35, pct);
+  rollersBottom.spin(forward, 70, pct);
   rollersTop.spin(reverse, 100, pct);
   topIntake.spin(reverse, 100, pct);
 }
@@ -271,28 +277,7 @@ void arcTurn(float rd, float angle, float maxSpeed = 100) {
     }
 }
 
-void brokenLeftSideAuto() {
-  intakeTop();
-  stopPiston.set(false);
-  inchDrive(27);
-  gyroturnAbs(-25.5, 800);
-  inchDrive(14, 900, 3); // 2.7
-  gyroturnAbs(-120);
-  inchDrive(31.5);
-  matchLoader.set(true);
-  gyroturnAbs(-185);
-  inchDrive(18, 800, 4.2); // match loading
-  wait(470, msec);
-  stopAll();
-  stopPiston.set(true);
-  inchDrive(-10, 1200, 3.8);
-  gyroturnAbs(-200);
-  inchDrive(-20, 1200, 3.8);
-  matchLoader.set(false);
-  intakeTop();  
-}
-
-void goodLeftSideAuto() {
+void longGoalLeft() {
   intakeTop();
   stopPiston.set(false);
   inchDrive(27);
@@ -315,33 +300,14 @@ void goodLeftSideAuto() {
   inchDrive(-19, 2000, 4);
 }
 
-void brokenRightSideAuto() {
-  intakeTop();
-  stopPiston.set(false);
-  inchDrive(27);
-  gyroturnAbs(28.5, 800);
-  inchDrive(14, 900, 3); // 2.7
-  gyroturnAbs(120);
-  inchDrive(33); // goijg to goal
-  matchLoader.set(true);
-  gyroturnAbs(180);
-  inchDrive(20, 800, 4.2); // match loading
-  wait(450, msec);
-  stopAll();
-  stopPiston.set(true);
-  inchDrive(-30, 1200, 3.8);
-  matchLoader.set(false);
-  intakeTop();
-}
-
-void goodRightSideAuto() {
+void longGoalRight() {
   intakeTop();
   stopPiston.set(false);
   inchDrive(27, 1000);
   gyroturnAbs(27, 750); // 800
   inchDrive(14, 900, 3);
   gyroturnAbs(120, 900);
-  inchDrive(33.8, 1000); // goijg to goal // og: 33 // middle field: 33.8
+  inchDrive(33.8, 1000); // goijg to goal // og: 33 // middle field: 33.8 // lessen if goal is more on the left
   matchLoader.set(true);
   gyroturnAbs(178);
   inchDrive(18, 800, 3.2); // match loading
@@ -351,10 +317,39 @@ void goodRightSideAuto() {
   // matchLoader.set(false);
   inchDrive(-32.5, 1200, 2.6);
   intakeTop();
-  wait(2000, msec);
+  wait(2500, msec);
+  intakeStop();
   inchDrive(10);
   stopPiston.set(false);
   inchDrive(-19, 2000, 4);
+}
+
+void WPRight() {
+  intakeTop();
+  stopPiston.set(false);
+  inchDrive(30, 680); // drive to 3 blocks
+  gyroturnAbs(28, 400); // turn for 3 blocks
+  matchLoader.set(true);
+  inchDrive(13, 800);
+  gyroturnAbs(60, 600);
+  matchLoader.set(false);
+  inchDrive(29.5, 650); // going under
+  matchLoader.set(true);
+  intakeBottom();
+  wait(500, msec);
+  inchDrive(-21, 680);
+  rollersTop.spin(reverse, 100, pct);
+  gyroturnAbs(-38, 700);
+  matchLoader.set(false);
+  inchDrive(20, 700);
+  intakeMiddleBottom(); // scoring
+  wait(2000, msec);
+  stopAll();
+
+}
+
+void WPLeft() {
+
 }
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -390,30 +385,36 @@ void pre_auton(void) {
 void autonomous(void) {
   switch(autonToggle) {
     case 0: // left side regular
-      goodLeftSideAuto();
+      longGoalLeft();
       break;
     case 1: // right side doesnt work
-      goodRightSideAuto();
+      longGoalRight();
       break;
-    case 3: // SKILLS 1-5
+    case 2: 
+      WPRight();
+      break;
+    case 3:
+      WPLeft();
+      break;
+    case 4: // SKILLS 1-5
       intakeTop();
       stopPiston.set(false);
       inchDrive(21, 780);
       gyroturnAbs(34, 540);
       inchDrive(20, 780);
       gyroturnAbs(125, 830); 
-      inchDrive(31, 950); // drive to goal
+      inchDrive(30.5, 950); // drive to goal
       matchLoader.set(true);
       gyroturnAbs(176, 780); // turn to match load
       inchDrive(15.5, 1800, 3.5); // match loading
       wait(700, msec);
-      stopTop();
-      stopPiston.set(true);
+      //stopAll();
       inchDrive(-32, 1450, 2.6);
+      stopPiston.set(true);
       intakeTop();
       wait(3000, msec);
       stopAll(); // end first goal
-    case 4:
+    case 5:
       matchLoader.set(false);
       inchDrive(15, 590);
       gyroturnAbs(-80); // TIME
@@ -422,20 +423,19 @@ void autonomous(void) {
       descore.set(true);
       inchDrive(80, 2000, 3.0); // wall reset
       gyroturnAbs(-45, 850);
-      inchDrive(19, 900); // drive to goal
+      inchDrive(18.5, 900); // drive to goal
       matchLoader.set(true);
       gyroturnAbs(0);
       stopPiston.set(false);
       intakeTop();
-      inchDrive(19, 2100, 3.5); // match loading
-      stopTop();
-      stopPiston.set(true);
+      inchDrive(20, 2100, 3.5); // match loading
       inchDrive(-32, 1500, 2.6); // scoring
+      stopPiston.set(true);
       intakeTop();
       wait(3000, msec);
       stopAll(); // end second goal
       matchLoader.set(false);
-    case 5: // SKILLS 6-8
+    case 6: // SKILLS 6-8
       inchDrive(15, 575);
       gyroturnAbs(-80, 655);
       inchDrive(118, 1950, 3); // wall reset
@@ -447,15 +447,14 @@ void autonomous(void) {
       intakeTop();
       stopPiston.set(false);
       inchDrive(35, 3000, 3); // match loading
-      stopTop();
-      gyroturnAbs(-6);
-      stopPiston.set(true);
+      gyroturnAbs(-8);
       inchDrive(-32, 1400, 2.7); // driving to goal
+      stopPiston.set(true);
       intakeTop();
       wait(3000, msec);
       stopAll();
       matchLoader.set(false); // end third goal
-    case 6: // parking from 3rd
+    case 7: // parking from 3rd
       inchDrive(15, 590);
       gyroturnAbs(130, 850);
       intakeTop();
@@ -463,15 +462,15 @@ void autonomous(void) {
       inchDrive(23, 900);
       wait(400, msec);
       stopAll();
-      rollersBottom.spin(forward, 100, pct);
+      rollersBottom.spin(reverse, 100, pct);
       gyroturnAbs(176, 800);
-      inchDrive(96, 2100, 3.2);
+      inchDrive(97, 2100, 3.2);
       rollersBottom.stop();
       gyroturnAbs(87, 300);
       intakeTop();
-      inchDrive(50, 1200, 4);
+      inchDrive(57, 1200, 6);
       break;
-    case 7: // wip 4th goal
+    case 8: // wip 4th goal
       inchDrive(15, 590);
       gyroturnAbs(130, 850);
       intakeTop();
