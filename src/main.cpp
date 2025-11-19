@@ -106,9 +106,8 @@ void intakemiddleTop() {
 }
 // intake to the middle bottom goal
 void intakeMiddleBottom() {
-  rollersBottom.spin(forward, 80, pct);
+  rollersBottom.spin(forward, 60, pct);
   rollersTop.spin(reverse, 100, pct);
-  topIntake.spin(reverse, 100, pct);
 }
 // stop all intakes
 void intakeStop() {
@@ -312,7 +311,7 @@ void longGoalRight() {
   gyroturnAbs(178);
   inchDrive(18, 800, 3.2); // match loading
   wait(380, msec); // need to lessen this mayb
-  stopAll();
+  stopTop();
   stopPiston.set(true);
   // matchLoader.set(false);
   inchDrive(-32.5, 1200, 2.6);
@@ -339,23 +338,23 @@ void WPRight() {
   intakeBottom();
   wait(500, msec);
   inchDrive(-21, 670);
+  matchLoader.set(false);
   rollersTop.spin(reverse, 100, pct);
   gyroturnAbs(-38, 690);
-  matchLoader.set(false);
   intakeMiddleBottom(); // scoring
   inchDrive(18, 700);
-  wait(480, msec);
-  stopAll();
+  wait(450, msec);
+  intakeTop();
   inchDrive(-49); // going to goal
   matchLoader.set(true);
   gyroturnAbs(-173);
-  intakeTop();
   inchDrive(19, 800, 3.1); // match loading
   wait(380, msec);
   stopAll();
   stopPiston.set(true);
   inchDrive(-31, 1200, 2.6);
   intakeTop();
+  wait(2000, msec);
   inchDrive(10, 500);
   stopPiston.set(false);
   inchDrive(-19, 2000, 4);
