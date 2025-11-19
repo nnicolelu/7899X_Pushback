@@ -106,7 +106,7 @@ void intakemiddleTop() {
 }
 // intake to the middle bottom goal
 void intakeMiddleBottom() {
-  rollersBottom.spin(forward, 70, pct);
+  rollersBottom.spin(forward, 80, pct);
   rollersTop.spin(reverse, 100, pct);
   topIntake.spin(reverse, 100, pct);
 }
@@ -329,23 +329,36 @@ void WPRight() {
   stopPiston.set(false);
   inchDrive(30, 680); // drive to 3 blocks
   gyroturnAbs(28, 400); // turn for 3 blocks
+  inchDrive(7, 700); // getting blocks
   matchLoader.set(true);
-  inchDrive(13, 800);
-  gyroturnAbs(60, 600);
+  inchDrive(5, 600);
+  gyroturnAbs(58, 580);
   matchLoader.set(false);
-  inchDrive(29.5, 650); // going under
+  inchDrive(32, 650); // going under
   matchLoader.set(true);
   intakeBottom();
   wait(500, msec);
-  inchDrive(-21, 680);
+  inchDrive(-21, 670);
   rollersTop.spin(reverse, 100, pct);
-  gyroturnAbs(-38, 700);
+  gyroturnAbs(-38, 690);
   matchLoader.set(false);
-  inchDrive(20, 700);
   intakeMiddleBottom(); // scoring
-  wait(2000, msec);
+  inchDrive(18, 700);
+  wait(480, msec);
   stopAll();
-
+  inchDrive(-49); // going to goal
+  matchLoader.set(true);
+  gyroturnAbs(-173);
+  intakeTop();
+  inchDrive(19, 800, 3.1); // match loading
+  wait(380, msec);
+  stopAll();
+  stopPiston.set(true);
+  inchDrive(-31, 1200, 2.6);
+  intakeTop();
+  inchDrive(10, 500);
+  stopPiston.set(false);
+  inchDrive(-19, 2000, 4);
 }
 
 void WPLeft() {
