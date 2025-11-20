@@ -284,11 +284,11 @@ void longGoalLeft() {
   inchDrive(7, 700); // getting blocks
   matchLoader.set(true);
   inchDrive(5, 500);
-  gyroturnAbs(-120, 800);
-  inchDrive(37, 880); // driving to match loader
+  gyroturnAbs(-120, 800); 
+  inchDrive(35.5, 880); // driving to match loader
   matchLoader.set(true);
   gyroturnAbs(-175, 900); // 185
-  inchDrive(18.5, 800, 3.4); // match loading
+  inchDrive(18.5, 800, 3.5); // match loading
   wait(340, msec);
   stopAll();
   stopPiston.set(true);
