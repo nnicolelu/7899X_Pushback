@@ -14,8 +14,8 @@ using namespace vex;
 competition Competition;
 
 // auton toggles: 
-// 0 = Left Long Goal
-// 1 = Right Long Goal
+// 0 = Left Long Goal reg
+// 1 = Right Long Goal with descore
 // 2 = WP Right
 // 3 = WP Left
 // 4 = skills goal 1
@@ -106,7 +106,7 @@ void intakemiddleTop() {
 }
 // intake to the middle bottom goal
 void intakeMiddleBottom() {
-  rollersBottom.spin(forward, 60, pct);
+  rollersBottom.spin(forward, 55, pct);
   rollersTop.spin(reverse, 100, pct);
 }
 // stop all intakes
@@ -319,12 +319,9 @@ void longGoalRight() {
   intakeTop();
   wait(2300, msec);
   intakeStop(); // done with goal
-  inchDrive(10, 500);
-  gyroturnAbs(270, 700);
-  inchDrive(13, 500);
-  gyroturnAbs(186, 650);
-  descore.set(false);
-  inchDrive(-25);
+  inchDrive(10, 450);
+  stopPiston.set(false);
+  inchDrive(-12);
   leftSide.stop(hold);
   rightSide.stop(hold);
 }
@@ -334,12 +331,12 @@ void WPRight() {
   stopPiston.set(false);
   inchDrive(30, 680); // drive to 3 blocks
   gyroturnAbs(28, 400); // turn for 3 blocks
-  inchDrive(7, 700); // getting blocks
+  inchDrive(7, 500); // getting blocks
   matchLoader.set(true);
   inchDrive(5, 600);
-  gyroturnAbs(58, 580);
+  gyroturnAbs(56, 580);
   matchLoader.set(false);
-  inchDrive(33, 650); // going under
+  inchDrive(36, 650); // going under
   matchLoader.set(true);
   intakeBottom();
   wait(500, msec);
@@ -348,19 +345,19 @@ void WPRight() {
   rollersTop.spin(reverse, 100, pct);
   gyroturnAbs(-38, 690);
   intakeMiddleBottom(); // scoring
-  inchDrive(18, 700);
-  wait(460, msec);
+  inchDrive(17.5, 700);
+  wait(630, msec);
   intakeTop();
-  inchDrive(-49, 1100); // going to goal
+  inchDrive(-47, 1100); // going to goal
   matchLoader.set(true);
   gyroturnAbs(-173, 1000);
-  inchDrive(19, 800, 3.1); // match loading
+  inchDrive(20, 800, 3.3); // match loading
   wait(380, msec);
   stopAll();
   stopPiston.set(true);
-  inchDrive(-31, 1200, 2.6);
+  inchDrive(-30.5, 1200, 2.6);
   intakeTop();
-  wait(2000, msec);
+  wait(2050, msec);
   inchDrive(10, 500);
   stopPiston.set(false);
   inchDrive(-19, 2000, 4);
