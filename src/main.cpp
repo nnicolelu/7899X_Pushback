@@ -285,17 +285,17 @@ void longGoalLeft() {
   matchLoader.set(true);
   inchDrive(5, 500);
   gyroturnAbs(-120, 800);
-  inchDrive(36.5); // driving to match loader
+  inchDrive(37, 880); // driving to match loader
   matchLoader.set(true);
-  gyroturnAbs(-182); // 185
-  inchDrive(18, 800, 3.4); // match loading
-  wait(350, msec);
+  gyroturnAbs(-175, 900); // 185
+  inchDrive(18.5, 800, 3.4); // match loading
+  wait(340, msec);
   stopAll();
   stopPiston.set(true);
   inchDrive(-32, 1200, 2.6);
   intakeTop();
-  wait(2100, msec);
-  inchDrive(10);
+  wait(3000, msec);
+  inchDrive(10, 450);
   stopPiston.set(false);
   inchDrive(-19, 2000, 4);
 }
@@ -308,8 +308,8 @@ void longGoalRight() {
   inchDrive(7, 700); // getting blocks
   matchLoader.set(true);
   inchDrive(5, 500);
-  gyroturnAbs(120, 700);
-  inchDrive(37, 750); // goijg to goal // og: 33 // middle field: 33.8 // lessen if goal is more on the left
+  gyroturnAbs(120, 720);
+  inchDrive(36.5, 880); // goijg to goal // og: 33 // middle field: 33.8 // lessen if goal is more on the left
   matchLoader.set(true);
   gyroturnAbs(179, 770);
   inchDrive(18, 800, 3.2); // match loading
