@@ -22,7 +22,7 @@ competition Competition;
 // 5 = skills goal 2
 // 6 = skills goal 3
 // 7 = skills park
-int autonToggle = 1;
+int autonToggle = 0;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -279,10 +279,12 @@ void arcTurn(float rd, float angle, float maxSpeed = 100) {
 void longGoalLeft() {
   intakeTop();
   stopPiston.set(false);
-  inchDrive(27);
-  gyroturnAbs(-25, 800);
-  inchDrive(14, 900, 3); // 2.7
-  gyroturnAbs(-120);
+  inchDrive(30, 680);
+  gyroturnAbs(-28, 700);
+  inchDrive(7, 700); // getting blocks
+  matchLoader.set(true);
+  inchDrive(5, 500);
+  gyroturnAbs(-120, 800);
   inchDrive(36.5); // driving to match loader
   matchLoader.set(true);
   gyroturnAbs(-182); // 185
@@ -290,10 +292,9 @@ void longGoalLeft() {
   wait(350, msec);
   stopAll();
   stopPiston.set(true);
-  matchLoader.set(false);
   inchDrive(-32, 1200, 2.6);
   intakeTop();
-  wait(2000, msec);
+  wait(2100, msec);
   inchDrive(10);
   stopPiston.set(false);
   inchDrive(-19, 2000, 4);
@@ -307,8 +308,8 @@ void longGoalRight() {
   inchDrive(7, 700); // getting blocks
   matchLoader.set(true);
   inchDrive(5, 500);
-  gyroturnAbs(120, 720);
-  inchDrive(36.5, 880); // goijg to goal // og: 33 // middle field: 33.8 // lessen if goal is more on the left
+  gyroturnAbs(120, 700);
+  inchDrive(37, 750); // goijg to goal // og: 33 // middle field: 33.8 // lessen if goal is more on the left
   matchLoader.set(true);
   gyroturnAbs(179, 770);
   inchDrive(18, 800, 3.2); // match loading
