@@ -22,7 +22,7 @@ competition Competition;
 // 5 = skills goal 2
 // 6 = skills goal 3
 // 7 = skills park
-int autonToggle = 0;
+int autonToggle = 3;
 
 // define your global instances of motors and other devices here
 brain Brain;
@@ -99,14 +99,14 @@ void intakeBottom() {
   rollersBottom.spin(reverse, 100, pct);
 }
 // intake to the middle top goal
-void intakemiddleTop() {
+void intakeMiddleTop() {
   rollersBottom.spin(reverse, 100, pct);
   rollersTop.spin(forward, 100, pct);
   topIntake.spin(reverse, 70, pct);
 }
 // intake to the middle bottom goal
 void intakeMiddleBottom() {
-  rollersBottom.spin(forward, 55, pct);
+  rollersBottom.spin(forward, 30, pct);
   rollersTop.spin(reverse, 100, pct);
 }
 // stop all intakes
@@ -337,26 +337,26 @@ void WPRight() {
   inchDrive(5, 600);
   gyroturnAbs(56, 580);
   matchLoader.set(false);
-  inchDrive(36, 650); // going under
+  inchDrive(37, 650); // going under
   matchLoader.set(true);
   intakeBottom();
   wait(500, msec);
   inchDrive(-21, 670);
   matchLoader.set(false);
   rollersTop.spin(reverse, 100, pct);
-  gyroturnAbs(-38, 690);
   intakeMiddleBottom(); // scoring
+  gyroturnAbs(-38, 690);
   inchDrive(17.5, 700);
   wait(630, msec);
   intakeTop();
-  inchDrive(-47, 1100); // going to goal
+  inchDrive(-48.5, 1100); // going to goal
   matchLoader.set(true);
   gyroturnAbs(-173, 1000);
   inchDrive(20, 800, 3.3); // match loading
   wait(380, msec);
-  stopAll();
+  stopTop();
   stopPiston.set(true);
-  inchDrive(-30.5, 1200, 2.6);
+  inchDrive(-301, 1200, 2.6);
   intakeTop();
   wait(2050, msec);
   inchDrive(10, 500);
@@ -365,7 +365,24 @@ void WPRight() {
 }
 
 void WPLeft() {
-
+  intakeTop();
+  stopPiston.set(false);
+  inchDrive(30, 680); // drive to 3 blocks
+  gyroturnAbs(-28, 400); // turn for 3 blocks
+  inchDrive(7, 500); // getting blocks
+  matchLoader.set(true);
+  inchDrive(9, 600);
+  rollersTop.spin(reverse, 100, pct);
+  topIntake.spin(reverse, 100, pct);
+  wait(300, msec);
+  rollersTop.stop();
+  topIntake.stop();
+  gyroturnAbs(-130, 800);
+  inchDrive(-16, 800);
+  intakeMiddleTop();
+  wait(900, msec);
+  stopAll();
+  inchDrive(45);
 }
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
